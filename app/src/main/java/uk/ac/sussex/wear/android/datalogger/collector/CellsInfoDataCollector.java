@@ -293,7 +293,7 @@ public class CellsInfoDataCollector extends AbstractDataCollector {
                         + "0;"
                         + "0;"
                         + "0;"
-                        + "0;";
+                        + "0";
 
             } else if (cellInfo instanceof CellInfoCdma) {
 
@@ -424,7 +424,7 @@ public class CellsInfoDataCollector extends AbstractDataCollector {
                         + "0;"
                         + "0;"
                         + "0;"
-                        + "0;";
+                        + "0";
 
                 // 13 129108338 114 -1
                 //LTE;129108338;234;10;384;144;39;-101;3
@@ -479,7 +479,7 @@ public class CellsInfoDataCollector extends AbstractDataCollector {
                         + "0;"
                         + "0;"
                         + "0;"
-                        + "0;";
+                        + "0";
 
             } else {
                 Log.e(TAG, "Unknown type of cell signal" );
