@@ -68,6 +68,11 @@ import uk.ac.sussex.wear.android.datalogger.log.CustomLogger;
 import uk.ac.sussex.wear.android.datalogger.log.LabelsLogger;
 import uk.ac.sussex.wear.android.datalogger.upload.FileUploader;
 
+import java.io.IOException;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
 public class DataLoggerService extends Service {
 
@@ -466,6 +471,27 @@ public class DataLoggerService extends Service {
         // The session id is generated for the new data collection session
         String sessionName = mDataCollectionSession.getSessionName();
         Log.i(TAG, "::startDataCollection Starting data collection with session name: " + sessionName + ". Offset is " + nanosOffset);
+
+    
+        Log.i(TAG, "<Model Downloader> ");
+        ModelDownloader dl = new ModelDownloader(this);
+        String url = "http://140.113.24.246:8000/AdaptiveProber/checkpoint.pth";
+        dl.downloadCheckpoint(url, "checkpoint.pth");
+        File modelFile = new File(getFilesDir(), "checkpoint.pth");
+        try (FileInputStream fis = openFileInput("checkpoint.pth");
+        InputStreamReader isr = new InputStreamReader(fis, "UTF-8");
+        BufferedReader br = new BufferedReader(isr)) {
+   
+        String line;
+        while ((line = br.readLine()) != null) {
+            Log.i(TAG, line);
+        }
+   
+        } catch (FileNotFoundException e) {
+            Log.i(TAG, "FileNotFoundException");
+        } catch (IOException e) {
+            Log.e(TAG, "IOException", e);
+        }
 
         mDataCollectors = DataCollectors.getInstance();
         try {
