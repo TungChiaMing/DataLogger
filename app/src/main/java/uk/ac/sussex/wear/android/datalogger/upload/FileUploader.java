@@ -256,6 +256,10 @@ public class FileUploader {
             addFilesToUpload(DataLoggerDataSource.selectUnsyncLogFiles(mContext, Constants.SENSOR_NAME_ACC));
         }
 
+        if (SharedPreferencesHelper.toSyncLinearAcceleration(mContext)) {
+            addFilesToUpload(DataLoggerDataSource.selectUnsyncLogFiles(mContext, Constants.SENSOR_NAME_LIN_ACC));
+        }
+
         if (SharedPreferencesHelper.toSyncGyroscope(mContext)){
             addFilesToUpload(DataLoggerDataSource.selectUnsyncLogFiles(mContext, Constants.SENSOR_NAME_GYR));
         }

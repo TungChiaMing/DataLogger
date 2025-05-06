@@ -161,7 +161,7 @@ public final class SharedPreferencesHelper {
     //SharedPreferences Sensors - Accelerometer
     public static boolean isEnabledAccelerometer(Context context){
         return getSharedPrefsInstance(context)
-                .getBoolean(context.getResources().getString(R.string.pref_sensors_key_enabled_accelerometer), true);
+                .getBoolean(context.getResources().getString(R.string.pref_sensors_key_enabled_accelerometer), false);
     }
 
     public static int getSamplingPeriodAccelerometer(Context context){
@@ -171,7 +171,7 @@ public final class SharedPreferencesHelper {
 
     public static boolean toSyncAccelerometer(Context context){
         return getSharedPrefsInstance(context)
-                .getBoolean(context.getResources().getString(R.string.pref_sensors_key_sync_accelerometer), true);
+                .getBoolean(context.getResources().getString(R.string.pref_sensors_key_sync_accelerometer), false);
     }
 
     //SharedPreferences Sensors - Gyroscope
@@ -193,7 +193,7 @@ public final class SharedPreferencesHelper {
     //SharedPreferences Sensors - Magnetometer
     public static boolean isEnabledMagnetometer(Context context){
         return getSharedPrefsInstance(context)
-                .getBoolean(context.getResources().getString(R.string.pref_sensors_key_enabled_magnetometer), true);
+                .getBoolean(context.getResources().getString(R.string.pref_sensors_key_enabled_magnetometer), false);
     }
 
     public static int getSamplingPeriodMagnetometer(Context context){
@@ -203,7 +203,7 @@ public final class SharedPreferencesHelper {
 
     public static boolean toSyncMagnetometer(Context context){
         return getSharedPrefsInstance(context)
-                .getBoolean(context.getResources().getString(R.string.pref_sensors_key_sync_magnetometer), true);
+                .getBoolean(context.getResources().getString(R.string.pref_sensors_key_sync_magnetometer), false);
     }
 
     //SharedPreferences Sensors - Microphone
