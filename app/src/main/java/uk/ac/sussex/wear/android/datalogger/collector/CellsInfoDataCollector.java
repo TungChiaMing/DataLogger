@@ -27,7 +27,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.os.SystemClock;
-import android.support.v4.app.ActivityCompat;
+import androidx.core.app.ActivityCompat;
 import android.telephony.CellIdentityCdma;
 import android.telephony.CellIdentityGsm;
 import android.telephony.CellIdentityLte;

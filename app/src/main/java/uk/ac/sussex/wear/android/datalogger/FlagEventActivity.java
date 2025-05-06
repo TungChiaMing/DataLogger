@@ -59,22 +59,19 @@ public class FlagEventActivity extends Activity implements View.OnClickListener 
     public void onClick(View v) {
         int id = v.getId();
 
-        switch (id) {
-            case R.id.confirm_button:
-                String notes = notesEditText.getText().toString();
-                if ("".equals(notes))
-                    notes = " ";
-                int radioButtonID = flagsRadioGroup.getCheckedRadioButtonId();
-                View radioButton = flagsRadioGroup.findViewById(radioButtonID);
-                int idx = flagsRadioGroup.indexOfChild(radioButton);
-                startService(new Intent(FlagEventActivity.this, DataLoggerService.class)
-                        .putExtra(Constants.COMMAND_SERVICE_INTENT_KEY,
-                                new CommandFLE(this.getResources().getStringArray(R.array.flaggable_events)[idx], notes).getMessage()));
-                this.finish();
-                break;
-            case R.id.cancel_button:
-                this.finish();
-                break;
+        if (id == R.id.confirm_button) {
+            String notes = notesEditText.getText().toString();
+            if ("".equals(notes))
+                notes = " ";
+            int radioButtonID = flagsRadioGroup.getCheckedRadioButtonId();
+            View radioButton = flagsRadioGroup.findViewById(radioButtonID);
+            int idx = flagsRadioGroup.indexOfChild(radioButton);
+            startService(new Intent(FlagEventActivity.this, DataLoggerService.class)
+                    .putExtra(Constants.COMMAND_SERVICE_INTENT_KEY,
+                            new CommandFLE(this.getResources().getStringArray(R.array.flaggable_events)[idx], notes).getMessage()));
+            this.finish();
+        } else if (id == R.id.cancel_button) {
+            this.finish();
         }
     }
 }

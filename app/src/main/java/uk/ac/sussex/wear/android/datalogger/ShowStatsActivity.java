@@ -25,7 +25,7 @@ package uk.ac.sussex.wear.android.datalogger;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
@@ -76,50 +76,47 @@ public class ShowStatsActivity extends Activity implements View.OnClickListener 
     public void onClick(View v) {
         int id = v.getId();
 
-        switch (id) {
-            case R.id.cancel_button:
-                new AlertDialog.Builder(this)
-                        .setTitle(getResources().getString(R.string.cancel_stats_confirmation_title))
-                        .setMessage(R.string.cancel_stats_confirmation_message)
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                ShowStatsActivity.this.finish();
+        if (id == R.id.cancel_button) {
+            new AlertDialog.Builder(this)
+                    .setTitle(getResources().getString(R.string.cancel_stats_confirmation_title))
+                    .setMessage(R.string.cancel_stats_confirmation_message)
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            ShowStatsActivity.this.finish();
+                        }
+                    })
+                    .setNegativeButton("No", null)
+                    .show();
+        } else if (id == R.id.clear_button) {
+            new AlertDialog.Builder(this)
+                    .setTitle(getResources().getString(R.string.clear_stats_confirmation_title))
+                    .setMessage(R.string.clear_stats_confirmation_message)
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            for (int i = 0; i < activitiesLabelsArray.length; i++) {
+                                SharedPreferencesHelper.setLabelAnnotationTime(ShowStatsActivity.this, i, 0);
                             }
-                        })
-                        .setNegativeButton("No", null)
-                        .show();
-                break;
-            case R.id.clear_button:
-                new AlertDialog.Builder(this)
-                        .setTitle(getResources().getString(R.string.clear_stats_confirmation_title))
-                        .setMessage(R.string.clear_stats_confirmation_message)
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                for (int i = 0; i < activitiesLabelsArray.length; i++) {
-                                    SharedPreferencesHelper.setLabelAnnotationTime(ShowStatsActivity.this, i, 0);
-                                }
-                                labelsAdapter.clearAll();
-                                String[] adapterArray = new String[activitiesLabelsArray.length];
-                                for (int i = 0; i < activitiesLabelsArray.length; i++) {
-                                    int annotatedSeconds = SharedPreferencesHelper.getLabelAnnotationTime(ShowStatsActivity.this, i);
-                                    long minutes = TimeUnit.SECONDS.toMinutes(annotatedSeconds);
-                                    adapterArray[i] = String.format("%-15s", activitiesLabelsArray[i] + " time:  ")
-                                            + String.format("%02d", minutes);
-                                }
-                                labelsAdapter.addAll(adapterArray);
-                                labelsAdapter.notifyDataSetChanged();
+                            labelsAdapter.clearAll();
+                            String[] adapterArray = new String[activitiesLabelsArray.length];
+                            for (int i = 0; i < activitiesLabelsArray.length; i++) {
+                                int annotatedSeconds = SharedPreferencesHelper.getLabelAnnotationTime(ShowStatsActivity.this, i);
+                                long minutes = TimeUnit.SECONDS.toMinutes(annotatedSeconds);
+                                adapterArray[i] = String.format("%-15s", activitiesLabelsArray[i] + " time:  ")
+                                        + String.format("%02d", minutes);
                             }
-                        })
-                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                ShowStatsActivity.this.finish();
-                            }
-                        })
-                        .show();
-                break;
+                            labelsAdapter.addAll(adapterArray);
+                            labelsAdapter.notifyDataSetChanged();
+                        }
+                    })
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            ShowStatsActivity.this.finish();
+                        }
+                    })
+                    .show();
         }
     }
 }

@@ -30,12 +30,17 @@ import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+// 从 support.design.widget.Snackbar → Material 版
+import com.google.android.material.snackbar.Snackbar;
+// 从 support.v4.content.ContextCompat → AndroidX 版
+import androidx.core.content.ContextCompat;
+// 从 support.v7.app.AlertDialog → AndroidX 版
+import androidx.appcompat.app.AlertDialog;
+// 从 support.v7.app.AppCompatActivity → AndroidX 版
+import androidx.appcompat.app.AppCompatActivity;
+// 从 support.v7.widget.Toolbar → AndroidX 版
+import androidx.appcompat.widget.Toolbar;
 import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
@@ -582,98 +587,88 @@ public class DisplayActivity extends AppCompatActivity implements DataLoggerStat
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
 
-        switch (item.getItemId()) {
-            case R.id.action_flag_event:
-                //User chose the "Flag event" item.
-                Intent flagEventIntent = new Intent(this, FlagEventActivity.class);
-                startActivity(flagEventIntent);
-                return true;
-
-            case R.id.action_settings:
-                // User chose the "Settings" item.
-                if (SharedPreferencesHelper.getDataCollectionState(this)) {
-                    Snackbar.make(mCoordinatorLayoutView, "Stop data collection before change settings.", Snackbar.LENGTH_LONG).show();
-                } else {
-                    final EditText view = new EditText(this);
-                    view.setInputType(InputType.TYPE_CLASS_NUMBER);
-                    new AlertDialog.Builder(this)
-                            .setTitle("Settings access protected")
-                            .setMessage("Enter admin pass:")
-                            .setView(view)
-                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    if (Constants.ADMIN_CODE == Integer.parseInt(view.getText().toString())) {
-                                        startActivity(new Intent(DisplayActivity.this, SettingsActivity.class));
-                                    } else {
-                                        Snackbar.make(mCoordinatorLayoutView, "Incorrect admin password", Snackbar.LENGTH_LONG).show();
-                                    }
-                                }
-                            })
-                            .setNegativeButton("Cancel", null)
-                            .show();
-                }
-                return true;
-
-            case R.id.action_upload:
-                String upload_confirmation_message = String.format("Before to confirm the upload, please check that:\n"
-                        + "- The phones are connected to the chargers\n"
-                        + "- The phones are connected to a WiFi network\n"
-                        + "The upload could take a while. Please, do not use the phone while they are uploading.");
+        int itemId = item.getItemId();
+        if (itemId == R.id.action_flag_event) {//User chose the "Flag event" item.
+            Intent flagEventIntent = new Intent(this, FlagEventActivity.class);
+            startActivity(flagEventIntent);
+            return true;
+        } else if (itemId == R.id.action_settings) {// User chose the "Settings" item.
+            if (SharedPreferencesHelper.getDataCollectionState(this)) {
+                Snackbar.make(mCoordinatorLayoutView, "Stop data collection before change settings.", Snackbar.LENGTH_LONG).show();
+            } else {
+                final EditText view = new EditText(this);
+                view.setInputType(InputType.TYPE_CLASS_NUMBER);
                 new AlertDialog.Builder(this)
-                        .setTitle(getResources().getString(R.string.upload_confirmation_title))
-                        .setMessage(upload_confirmation_message)
-                        .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+                        .setTitle("Settings access protected")
+                        .setMessage("Enter admin pass:")
+                        .setView(view)
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                startService(new Intent(DisplayActivity.this, DataLoggerService.class)
-                                        .putExtra(Constants.COMMAND_SERVICE_INTENT_KEY, new CommandFUS().getMessage()));
-                                menu.findItem(R.id.action_cancel_upload).setVisible(true);
-                                menu.findItem(R.id.action_upload).setVisible(false);
+                                if (Constants.ADMIN_CODE == Integer.parseInt(view.getText().toString())) {
+                                    startActivity(new Intent(DisplayActivity.this, SettingsActivity.class));
+                                } else {
+                                    Snackbar.make(mCoordinatorLayoutView, "Incorrect admin password", Snackbar.LENGTH_LONG).show();
+                                }
                             }
                         })
                         .setNegativeButton("Cancel", null)
                         .show();
-                return true;
-            case R.id.action_cancel_upload:
-                String cancel_confirmation_message = "Are you sure to cancel the upload?";
-                new AlertDialog.Builder(this)
-                        .setTitle(getResources().getString(R.string.cancel_confirmation_title))
-                        .setMessage(cancel_confirmation_message)
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                startService(new Intent(DisplayActivity.this, DataLoggerService.class)
-                                        .putExtra(Constants.COMMAND_SERVICE_INTENT_KEY, new CommandFUC().getMessage()));
-                                menu.findItem(R.id.action_upload).setVisible(true);
-                                menu.findItem(R.id.action_cancel_upload).setVisible(false);
-                            }
-                        })
-                        .setNegativeButton("No", null)
-                        .show();
-                return true;
-            case R.id.action_pair:
-                Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-                discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
-                startActivity(discoverableIntent);
-                return true;
-
-            case R.id.action_stats:
-                Intent showStatsIntent = new Intent(this, ShowStatsActivity.class);
-                startActivity(showStatsIntent);
-                return true;
-
-            case R.id.action_about:
-                Intent showAppInfo = new Intent(this, AboutActivity.class);
-                startActivity(showAppInfo);
-                return true;
-
-            default:
-                // If we got here, the user's action was not recognized.
-                // Invoke the superclass to handle it.
-                return super.onOptionsItemSelected(item);
-
-        }
+            }
+            return true;
+        } else if (itemId == R.id.action_upload) {
+            String upload_confirmation_message = String.format("Before to confirm the upload, please check that:\n"
+                    + "- The phones are connected to the chargers\n"
+                    + "- The phones are connected to a WiFi network\n"
+                    + "The upload could take a while. Please, do not use the phone while they are uploading.");
+            new AlertDialog.Builder(this)
+                    .setTitle(getResources().getString(R.string.upload_confirmation_title))
+                    .setMessage(upload_confirmation_message)
+                    .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            startService(new Intent(DisplayActivity.this, DataLoggerService.class)
+                                    .putExtra(Constants.COMMAND_SERVICE_INTENT_KEY, new CommandFUS().getMessage()));
+                            menu.findItem(R.id.action_cancel_upload).setVisible(true);
+                            menu.findItem(R.id.action_upload).setVisible(false);
+                        }
+                    })
+                    .setNegativeButton("Cancel", null)
+                    .show();
+            return true;
+        } else if (itemId == R.id.action_cancel_upload) {
+            String cancel_confirmation_message = "Are you sure to cancel the upload?";
+            new AlertDialog.Builder(this)
+                    .setTitle(getResources().getString(R.string.cancel_confirmation_title))
+                    .setMessage(cancel_confirmation_message)
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            startService(new Intent(DisplayActivity.this, DataLoggerService.class)
+                                    .putExtra(Constants.COMMAND_SERVICE_INTENT_KEY, new CommandFUC().getMessage()));
+                            menu.findItem(R.id.action_upload).setVisible(true);
+                            menu.findItem(R.id.action_cancel_upload).setVisible(false);
+                        }
+                    })
+                    .setNegativeButton("No", null)
+                    .show();
+            return true;
+        } else if (itemId == R.id.action_pair) {
+            Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+            discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
+            startActivity(discoverableIntent);
+            return true;
+        } else if (itemId == R.id.action_stats) {
+            Intent showStatsIntent = new Intent(this, ShowStatsActivity.class);
+            startActivity(showStatsIntent);
+            return true;
+        } else if (itemId == R.id.action_about) {
+            Intent showAppInfo = new Intent(this, AboutActivity.class);
+            startActivity(showAppInfo);
+            return true;
+        }// If we got here, the user's action was not recognized.
+        // Invoke the superclass to handle it.
+        return super.onOptionsItemSelected(item);
 
     }
 
@@ -790,62 +785,59 @@ public class DisplayActivity extends AppCompatActivity implements DataLoggerStat
     @Override
     public boolean onLongClick(View v) {
         int id = v.getId();
-        switch (id) {
-            case R.id.ui_data_collection_button:
-                if (!SharedPreferencesHelper.getDataCollectionState(DisplayActivity.this)) {
-                    startService(new Intent(DisplayActivity.this, DataLoggerService.class)
-                            .putExtra(Constants.COMMAND_SERVICE_INTENT_KEY,
-                                    new CommandDCE(true).getMessage()));
-                    setChecked(mDataCollectionButton, true);
-                    MenuItem flagEventItem = menu.findItem(R.id.action_flag_event);
-                    flagEventItem.setVisible(true);
-                    updateTextviewSwitch(true, R.id.ui_data_collection_custom_text);
-                    mLabelAnnotationButton.setEnabled(true);
-                } else {
-                    startService(new Intent(DisplayActivity.this, DataLoggerService.class)
-                            .putExtra(Constants.COMMAND_SERVICE_INTENT_KEY,
-                                    new CommandDCE(false).getMessage()));
-                    setChecked(mDataCollectionButton, false);
-                    MenuItem flagEventItem = menu.findItem(R.id.action_flag_event);
-                    flagEventItem.setVisible(false);
-                    updateTextviewSwitch(false, R.id.ui_data_collection_custom_text);
-                    mLabelAnnotationButton.setEnabled(false);
-                }
-                break;
-            case R.id.ui_label_annotation_button:
-                if (!SharedPreferencesHelper.getLabelsAnnotationState(DisplayActivity.this)) {
-                    startService(new Intent(DisplayActivity.this, DataLoggerService.class)
-                            .putExtra(Constants.COMMAND_SERVICE_INTENT_KEY,
-                                    new CommandLAE(true,
-                                            SharedPreferencesHelper.getSelectedActivityLabel(DisplayActivity.this),
-                                            SharedPreferencesHelper.getSelectedBodyPositionLabel(DisplayActivity.this),
-                                            SharedPreferencesHelper.getSelectedLocationLabel(DisplayActivity.this)
-                                    ).getMessage()
-                            )
-                    );
-                    SharedPreferencesHelper.setLabelsAnnotationStartingTime(DisplayActivity.this, System.currentTimeMillis());
-                    onLabelTimerStart(0);
-                    setChecked(mLabelAnnotationButton, true);
-                    updateTextviewSwitch(true, R.id.ui_label_annotation_custom_text);
-                    mDataCollectionButton.setEnabled(false);
-                } else {
-                    long lengthLabelMillis = System.currentTimeMillis() - SharedPreferencesHelper.getLabelsAnnotationStartingTime(DisplayActivity.this);
-                    SharedPreferencesHelper.addLabelAnnotationTime(DisplayActivity.this,
-                            SharedPreferencesHelper.getAnnotatedActivityLabel(DisplayActivity.this),
-                            (int) (lengthLabelMillis / 1000));
+        if (id == R.id.ui_data_collection_button) {
+            if (!SharedPreferencesHelper.getDataCollectionState(DisplayActivity.this)) {
+                startService(new Intent(DisplayActivity.this, DataLoggerService.class)
+                        .putExtra(Constants.COMMAND_SERVICE_INTENT_KEY,
+                                new CommandDCE(true).getMessage()));
+                setChecked(mDataCollectionButton, true);
+                MenuItem flagEventItem = menu.findItem(R.id.action_flag_event);
+                flagEventItem.setVisible(true);
+                updateTextviewSwitch(true, R.id.ui_data_collection_custom_text);
+                mLabelAnnotationButton.setEnabled(true);
+            } else {
+                startService(new Intent(DisplayActivity.this, DataLoggerService.class)
+                        .putExtra(Constants.COMMAND_SERVICE_INTENT_KEY,
+                                new CommandDCE(false).getMessage()));
+                setChecked(mDataCollectionButton, false);
+                MenuItem flagEventItem = menu.findItem(R.id.action_flag_event);
+                flagEventItem.setVisible(false);
+                updateTextviewSwitch(false, R.id.ui_data_collection_custom_text);
+                mLabelAnnotationButton.setEnabled(false);
+            }
+        } else if (id == R.id.ui_label_annotation_button) {
+            if (!SharedPreferencesHelper.getLabelsAnnotationState(DisplayActivity.this)) {
+                startService(new Intent(DisplayActivity.this, DataLoggerService.class)
+                        .putExtra(Constants.COMMAND_SERVICE_INTENT_KEY,
+                                new CommandLAE(true,
+                                        SharedPreferencesHelper.getSelectedActivityLabel(DisplayActivity.this),
+                                        SharedPreferencesHelper.getSelectedBodyPositionLabel(DisplayActivity.this),
+                                        SharedPreferencesHelper.getSelectedLocationLabel(DisplayActivity.this)
+                                ).getMessage()
+                        )
+                );
+                SharedPreferencesHelper.setLabelsAnnotationStartingTime(DisplayActivity.this, System.currentTimeMillis());
+                onLabelTimerStart(0);
+                setChecked(mLabelAnnotationButton, true);
+                updateTextviewSwitch(true, R.id.ui_label_annotation_custom_text);
+                mDataCollectionButton.setEnabled(false);
+            } else {
+                long lengthLabelMillis = System.currentTimeMillis() - SharedPreferencesHelper.getLabelsAnnotationStartingTime(DisplayActivity.this);
+                SharedPreferencesHelper.addLabelAnnotationTime(DisplayActivity.this,
+                        SharedPreferencesHelper.getAnnotatedActivityLabel(DisplayActivity.this),
+                        (int) (lengthLabelMillis / 1000));
 
-                    SharedPreferencesHelper.setLabelsAnnotationStartingTime(DisplayActivity.this, 0);
-                    mLabelsChronometer.stop();
-                    startService(new Intent(DisplayActivity.this, DataLoggerService.class)
-                            .putExtra(Constants.COMMAND_SERVICE_INTENT_KEY,
-                                    new CommandLAE(false).getMessage()
-                            )
-                    );
-                    setChecked(mLabelAnnotationButton, false);
-                    updateTextviewSwitch(false, R.id.ui_label_annotation_custom_text);
-                    mDataCollectionButton.setEnabled(true);
-                }
-                break;
+                SharedPreferencesHelper.setLabelsAnnotationStartingTime(DisplayActivity.this, 0);
+                mLabelsChronometer.stop();
+                startService(new Intent(DisplayActivity.this, DataLoggerService.class)
+                        .putExtra(Constants.COMMAND_SERVICE_INTENT_KEY,
+                                new CommandLAE(false).getMessage()
+                        )
+                );
+                setChecked(mLabelAnnotationButton, false);
+                updateTextviewSwitch(false, R.id.ui_label_annotation_custom_text);
+                mDataCollectionButton.setEnabled(true);
+            }
         }
         return true;
     }

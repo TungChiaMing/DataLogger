@@ -82,7 +82,7 @@ public final class SharedPreferencesHelper {
 
     public static boolean isEnabledHARAPI(Context context){
         return getSharedPrefsInstance(context)
-                .getBoolean(context.getResources().getString(R.string.pref_general_key_enabled_HAR_API), true);
+                .getBoolean(context.getResources().getString(R.string.pref_general_key_enabled_HAR_API), false);
     }
 
     public static int getDetectionIntervalHARAPI(Context context){
@@ -119,7 +119,7 @@ public final class SharedPreferencesHelper {
     //SharedPreferences Sensors - WiFi
     public static boolean isEnabledWiFi(Context context){
         return getSharedPrefsInstance(context)
-                .getBoolean(context.getResources().getString(R.string.pref_sensors_key_enabled_WiFi), true);
+                .getBoolean(context.getResources().getString(R.string.pref_sensors_key_enabled_WiFi), false);
     }
 
     public static int getSamplingPeriodWiFiInfo(Context context){
@@ -134,13 +134,13 @@ public final class SharedPreferencesHelper {
 
     public static boolean toSyncWiFi(Context context){
         return getSharedPrefsInstance(context)
-                .getBoolean(context.getResources().getString(R.string.pref_sensors_key_sync_WiFi), true);
+                .getBoolean(context.getResources().getString(R.string.pref_sensors_key_sync_WiFi), false);
     }
 
     //SharedPreferences Sensors - Bluetooth
     public static boolean isEnabledBluetooth(Context context){
         return getSharedPrefsInstance(context)
-                .getBoolean(context.getResources().getString(R.string.pref_sensors_key_enabled_Bluetooth), true);
+                .getBoolean(context.getResources().getString(R.string.pref_sensors_key_enabled_Bluetooth), false);
     }
 
     public static int getSamplingPeriodBluetoothInfo(Context context){
@@ -155,7 +155,7 @@ public final class SharedPreferencesHelper {
 
     public static boolean toSyncBluetooth(Context context){
         return getSharedPrefsInstance(context)
-                .getBoolean(context.getResources().getString(R.string.pref_sensors_key_sync_Bluetooth), true);
+                .getBoolean(context.getResources().getString(R.string.pref_sensors_key_sync_Bluetooth), false);
     }
 
     //SharedPreferences Sensors - Accelerometer
@@ -209,7 +209,7 @@ public final class SharedPreferencesHelper {
     //SharedPreferences Sensors - Microphone
     public static boolean isEnabledMicrophone(Context context){
         return getSharedPrefsInstance(context)
-                .getBoolean(context.getResources().getString(R.string.pref_sensors_key_enabled_microphone), true);
+                .getBoolean(context.getResources().getString(R.string.pref_sensors_key_enabled_microphone), false);
     }
 
     public static int getSamplingPeriodMicrophone(Context context){
@@ -224,18 +224,18 @@ public final class SharedPreferencesHelper {
 
     public static boolean toSyncMicrophone(Context context){
         return getSharedPrefsInstance(context)
-                .getBoolean(context.getResources().getString(R.string.pref_sensors_key_sync_microphone), true);
+                .getBoolean(context.getResources().getString(R.string.pref_sensors_key_sync_microphone), false);
     }
 
     //SharedPreferences Sensors - Battery
     public static boolean isEnabledBattery(Context context){
         return getSharedPrefsInstance(context)
-                .getBoolean(context.getResources().getString(R.string.pref_sensors_key_enabled_battery), true);
+                .getBoolean(context.getResources().getString(R.string.pref_sensors_key_enabled_battery), false);
     }
 
     public static boolean toSyncBattery(Context context){
         return getSharedPrefsInstance(context)
-                .getBoolean(context.getResources().getString(R.string.pref_sensors_key_sync_battery), true);
+                .getBoolean(context.getResources().getString(R.string.pref_sensors_key_sync_battery), false);
     }
 
 
@@ -243,40 +243,40 @@ public final class SharedPreferencesHelper {
     //SharedPreferences Sensors - Cells network (deprecated)
     public static boolean isEnabledDeprCellsInfo(Context context){
         return getSharedPrefsInstance(context)
-                .getBoolean(context.getResources().getString(R.string.pref_sensors_key_enabled_depr_cells), true);
+                .getBoolean(context.getResources().getString(R.string.pref_sensors_key_enabled_depr_cells), false);
     }
 
     public static boolean toSyncDeprCellsInfo(Context context){
         return getSharedPrefsInstance(context)
-                .getBoolean(context.getResources().getString(R.string.pref_sensors_key_sync_depr_cells), true);
+                .getBoolean(context.getResources().getString(R.string.pref_sensors_key_sync_depr_cells), false);
     }
 
     //SharedPreferences Sensors - Location
     public static boolean isEnabledLocation(Context context){
         return getSharedPrefsInstance(context)
-                .getBoolean(context.getResources().getString(R.string.pref_sensors_key_enabled_location), true);
+                .getBoolean(context.getResources().getString(R.string.pref_sensors_key_enabled_location), false);
     }
 
     public static boolean toSyncLocation(Context context){
         return getSharedPrefsInstance(context)
-                .getBoolean(context.getResources().getString(R.string.pref_sensors_key_sync_location), true);
+                .getBoolean(context.getResources().getString(R.string.pref_sensors_key_sync_location), false);
     }
 
     //SharedPreferences Sensors - Satellites
     public static boolean isEnabledSatellite(Context context){
         return getSharedPrefsInstance(context)
-                .getBoolean(context.getResources().getString(R.string.pref_sensors_key_enabled_satellite), true);
+                .getBoolean(context.getResources().getString(R.string.pref_sensors_key_enabled_satellite), false);
     }
 
     public static boolean toSyncSatellite(Context context){
         return getSharedPrefsInstance(context)
-                .getBoolean(context.getResources().getString(R.string.pref_sensors_key_sync_satellite), true);
+                .getBoolean(context.getResources().getString(R.string.pref_sensors_key_sync_satellite), false);
     }
 
     //SharedPreferences Sensors - Temperature
     public static boolean isEnabledTemperature(Context context){
         return getSharedPrefsInstance(context)
-                .getBoolean(context.getResources().getString(R.string.pref_sensors_key_enabled_temperature), true);
+                .getBoolean(context.getResources().getString(R.string.pref_sensors_key_enabled_temperature), false);
     }
 
     public static int getSamplingPeriodTemperature(Context context){
@@ -286,13 +286,13 @@ public final class SharedPreferencesHelper {
 
     public static boolean toSyncTemperature(Context context){
         return getSharedPrefsInstance(context)
-                .getBoolean(context.getResources().getString(R.string.pref_sensors_key_sync_temperature), true);
+                .getBoolean(context.getResources().getString(R.string.pref_sensors_key_sync_temperature), false);
     }
 
     //SharedPreferences Sensors - Ambient light
     public static boolean isEnabledLight(Context context){
         return getSharedPrefsInstance(context)
-                .getBoolean(context.getResources().getString(R.string.pref_sensors_key_enabled_light), true);
+                .getBoolean(context.getResources().getString(R.string.pref_sensors_key_enabled_light), false);
     }
 
     public static int getSamplingPeriodLight(Context context){
@@ -302,13 +302,13 @@ public final class SharedPreferencesHelper {
 
     public static boolean toSyncLight(Context context){
         return getSharedPrefsInstance(context)
-                .getBoolean(context.getResources().getString(R.string.pref_sensors_key_sync_light), true);
+                .getBoolean(context.getResources().getString(R.string.pref_sensors_key_sync_light), false);
     }
 
     //SharedPreferences Sensors - Pressure
     public static boolean isEnabledPressure(Context context){
         return getSharedPrefsInstance(context)
-                .getBoolean(context.getResources().getString(R.string.pref_sensors_key_enabled_pressure), true);
+                .getBoolean(context.getResources().getString(R.string.pref_sensors_key_enabled_pressure), false);
     }
 
     public static int getSamplingPeriodPressure(Context context){
@@ -318,13 +318,13 @@ public final class SharedPreferencesHelper {
 
     public static boolean toSyncPressure(Context context){
         return getSharedPrefsInstance(context)
-                .getBoolean(context.getResources().getString(R.string.pref_sensors_key_sync_pressure), true);
+                .getBoolean(context.getResources().getString(R.string.pref_sensors_key_sync_pressure), false);
     }
 
     //SharedPreferences Sensors - Humidity
     public static boolean isEnabledHumidity(Context context){
         return getSharedPrefsInstance(context)
-                .getBoolean(context.getResources().getString(R.string.pref_sensors_key_enabled_humidity), true);
+                .getBoolean(context.getResources().getString(R.string.pref_sensors_key_enabled_humidity), false);
     }
 
     public static int getSamplingPeriodHumidity(Context context){
@@ -334,7 +334,7 @@ public final class SharedPreferencesHelper {
 
     public static boolean toSyncHumidity(Context context){
         return getSharedPrefsInstance(context)
-                .getBoolean(context.getResources().getString(R.string.pref_sensors_key_sync_humidity), true);
+                .getBoolean(context.getResources().getString(R.string.pref_sensors_key_sync_humidity), false);
     }
 
 
@@ -342,7 +342,7 @@ public final class SharedPreferencesHelper {
     //SharedPreferences Sensors - Orientation
     public static boolean isEnabledOrientation(Context context){
         return getSharedPrefsInstance(context)
-                .getBoolean(context.getResources().getString(R.string.pref_sensors_key_enabled_orientation), true);
+                .getBoolean(context.getResources().getString(R.string.pref_sensors_key_enabled_orientation), false);
     }
 
     public static int getSamplingPeriodOrientation(Context context){
@@ -352,7 +352,7 @@ public final class SharedPreferencesHelper {
 
     public static boolean toSyncOrientation(Context context){
         return getSharedPrefsInstance(context)
-                .getBoolean(context.getResources().getString(R.string.pref_sensors_key_sync_orientation), true);
+                .getBoolean(context.getResources().getString(R.string.pref_sensors_key_sync_orientation), false);
     }
 
     //SharedPreferences Sensors - Linear Acceleration
@@ -374,7 +374,7 @@ public final class SharedPreferencesHelper {
     //SharedPreferences Sensors - Gravity
     public static boolean isEnabledGravity(Context context) {
         return getSharedPrefsInstance(context)
-                .getBoolean(context.getResources().getString(R.string.pref_sensors_key_enabled_gravity), true);
+                .getBoolean(context.getResources().getString(R.string.pref_sensors_key_enabled_gravity), false);
     }
 
     public static int getSamplingPeriodGravity(Context context) {
@@ -384,7 +384,7 @@ public final class SharedPreferencesHelper {
 
     public static boolean toSyncGravity(Context context) {
         return getSharedPrefsInstance(context)
-                .getBoolean(context.getResources().getString(R.string.pref_sensors_key_sync_gravity), true);
+                .getBoolean(context.getResources().getString(R.string.pref_sensors_key_sync_gravity), false);
     }
 
     /**

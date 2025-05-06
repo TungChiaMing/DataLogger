@@ -43,10 +43,13 @@ import android.os.PowerManager;
 import android.os.SystemClock;
 import android.os.Vibrator;
 import android.provider.Settings;
-import android.support.annotation.Nullable;
-import android.support.v4.app.NotificationCompat;
+import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
 import android.util.Log;
 import android.view.WindowManager;
+import android.os.Build;
+import android.app.NotificationChannel;
+
 
 import java.io.File;
 import java.util.ArrayList;
@@ -67,12 +70,6 @@ import uk.ac.sussex.wear.android.datalogger.har.HARecognizerApiHandler;
 import uk.ac.sussex.wear.android.datalogger.log.CustomLogger;
 import uk.ac.sussex.wear.android.datalogger.log.LabelsLogger;
 import uk.ac.sussex.wear.android.datalogger.upload.FileUploader;
-
-import java.io.IOException;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 
 public class DataLoggerService extends Service {
 
@@ -106,6 +103,8 @@ public class DataLoggerService extends Service {
 
     // Master device Bluetooth MAC address
     private String mMasterAddress;
+
+    private static final String CHANNEL_ID = "data_logger_service_channel";
 
     // Timer to manage maximum logging intervals
     private final Runnable mLogTimerRunnable = new Runnable() {
@@ -307,9 +306,12 @@ public class DataLoggerService extends Service {
         PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
         wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, TAG);
 
+        createNotificationChannel();
+
         mMasterAddress = "";
 
-        mNotification = new NotificationCompat.Builder(this)
+
+        mNotification = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle(getResources().getString(R.string.notification_content_title))
                 .setTicker(getResources().getString(R.string.notification_ticker))
                 .setContentText(getResources().getString(R.string.notification_waiting_content_text))
@@ -472,26 +474,6 @@ public class DataLoggerService extends Service {
         String sessionName = mDataCollectionSession.getSessionName();
         Log.i(TAG, "::startDataCollection Starting data collection with session name: " + sessionName + ". Offset is " + nanosOffset);
 
-    
-        Log.i(TAG, "<Model Downloader> ");
-        ModelDownloader dl = new ModelDownloader(this);
-        String url = "http://140.113.24.246:8000/AdaptiveProber/checkpoint.pth";
-        dl.downloadCheckpoint(url, "checkpoint.pth");
-        File modelFile = new File(getFilesDir(), "checkpoint.pth");
-        try (FileInputStream fis = openFileInput("checkpoint.pth");
-        InputStreamReader isr = new InputStreamReader(fis, "UTF-8");
-        BufferedReader br = new BufferedReader(isr)) {
-   
-        String line;
-        while ((line = br.readLine()) != null) {
-            Log.i(TAG, line);
-        }
-   
-        } catch (FileNotFoundException e) {
-            Log.i(TAG, "FileNotFoundException");
-        } catch (IOException e) {
-            Log.e(TAG, "IOException", e);
-        }
 
         mDataCollectors = DataCollectors.getInstance();
         try {
@@ -534,7 +516,7 @@ public class DataLoggerService extends Service {
                     PendingIntent.FLAG_CANCEL_CURRENT);
 
             // Service notification is updated to show that the service is collecting data
-            mNotification = new NotificationCompat.Builder(this)
+            mNotification = new NotificationCompat.Builder(this, CHANNEL_ID)
                     .setContentTitle(getResources().getString(R.string.notification_content_title))
                     .setTicker(getResources().getString(R.string.notification_ticker))
                     .setContentText(getResources().getString(R.string.notification_collecting_content_text))
@@ -553,7 +535,7 @@ public class DataLoggerService extends Service {
         } else {
 
             // Service notification is updated to show that the service is collecting data
-            mNotification = new NotificationCompat.Builder(this)
+            mNotification = new NotificationCompat.Builder(this, CHANNEL_ID)
                     .setContentTitle(getResources().getString(R.string.notification_content_title))
                     .setTicker(getResources().getString(R.string.notification_ticker))
                     .setContentText(getResources().getString(R.string.notification_collecting_content_text))
@@ -607,7 +589,7 @@ public class DataLoggerService extends Service {
                 (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
         // Service notification is updated to show that the service is NOT collecting data
-        mNotification = new NotificationCompat.Builder(this)
+        mNotification = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle(getResources().getString(R.string.notification_content_title))
                 .setTicker(getResources().getString(R.string.notification_ticker))
                 .setContentText(getResources().getString(R.string.notification_waiting_content_text))
@@ -961,7 +943,7 @@ public class DataLoggerService extends Service {
     }
 
 
-    protected static void setStatusDelegate(DataLoggerStatusDelegate delegate) {
+    public static void setStatusDelegate(DataLoggerStatusDelegate delegate) {
         if (delegate == null)
             return;
         mDelegate = delegate;
@@ -971,6 +953,20 @@ public class DataLoggerService extends Service {
         return mDelegate;
     }
 
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(
+                    CHANNEL_ID,
+                    "Data Logger Service",
+                    NotificationManager.IMPORTANCE_LOW
+            );
+            channel.setDescription("用於 DataLogger 前台服務的通知");
+
+            NotificationManager mgr =
+                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            mgr.createNotificationChannel(channel);
+        }
+    }
 
     @Nullable
     @Override
