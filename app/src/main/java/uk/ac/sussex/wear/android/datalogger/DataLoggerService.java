@@ -316,7 +316,7 @@ public class DataLoggerService extends Service {
                 .setTicker(getResources().getString(R.string.notification_ticker))
                 .setContentText(getResources().getString(R.string.notification_waiting_content_text))
                 .setSmallIcon(R.drawable.ic_not_128)
-                .setContentIntent(PendingIntent.getActivity(this, 1, new Intent(this, DisplayActivity.class), PendingIntent.FLAG_UPDATE_CURRENT))
+                .setContentIntent(PendingIntent.getActivity(this, 1, new Intent(this, DisplayActivity.class), PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE ))
                 .setOngoing(true).build();
 
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -513,7 +513,7 @@ public class DataLoggerService extends Service {
             //Pending intent for flagging a special event during the recording
             PendingIntent flagEventIntent = PendingIntent.getActivity(this,
                     1, new Intent(this, FlagEventActivity.class),
-                    PendingIntent.FLAG_CANCEL_CURRENT);
+                    PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
             // Service notification is updated to show that the service is collecting data
             mNotification = new NotificationCompat.Builder(this, CHANNEL_ID)
@@ -521,7 +521,7 @@ public class DataLoggerService extends Service {
                     .setTicker(getResources().getString(R.string.notification_ticker))
                     .setContentText(getResources().getString(R.string.notification_collecting_content_text))
                     .setSmallIcon(R.drawable.ic_rec_128)
-                    .setContentIntent(PendingIntent.getActivity(this, 1, new Intent(this, DisplayActivity.class), PendingIntent.FLAG_UPDATE_CURRENT))
+                    .setContentIntent(PendingIntent.getActivity(this, 1, new Intent(this, DisplayActivity.class), PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE))
                     .addAction(R.drawable.ic_record_voice_over_white_18dp, this.getResources().getString(R.string.flag_event), flagEventIntent)
                     .setOngoing(true)
                     .build();
@@ -540,7 +540,7 @@ public class DataLoggerService extends Service {
                     .setTicker(getResources().getString(R.string.notification_ticker))
                     .setContentText(getResources().getString(R.string.notification_collecting_content_text))
                     .setSmallIcon(R.drawable.ic_rec_128)
-                    .setContentIntent(PendingIntent.getActivity(this, 1, new Intent(this, DisplayActivity.class), PendingIntent.FLAG_UPDATE_CURRENT))
+                    .setContentIntent(PendingIntent.getActivity(this, 1, new Intent(this, DisplayActivity.class), PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE))
                     .setOngoing(true).build();
         }
 
@@ -594,7 +594,7 @@ public class DataLoggerService extends Service {
                 .setTicker(getResources().getString(R.string.notification_ticker))
                 .setContentText(getResources().getString(R.string.notification_waiting_content_text))
                 .setSmallIcon(R.drawable.ic_not_128)
-                .setContentIntent(PendingIntent.getActivity(this, 1, new Intent(this, DisplayActivity.class), PendingIntent.FLAG_UPDATE_CURRENT))
+                .setContentIntent(PendingIntent.getActivity(this, 1, new Intent(this, DisplayActivity.class), PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE))
                 .setOngoing(true).build();
         notificationManager.notify(Constants.NOTIFICATION_ID.FOREGROUND_SERVICE, mNotification);
 
