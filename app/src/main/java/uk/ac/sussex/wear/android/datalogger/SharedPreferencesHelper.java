@@ -230,12 +230,12 @@ public final class SharedPreferencesHelper {
     //SharedPreferences Sensors - Battery
     public static boolean isEnabledBattery(Context context){
         return getSharedPrefsInstance(context)
-                .getBoolean(context.getResources().getString(R.string.pref_sensors_key_enabled_battery), false);
+                .getBoolean(context.getResources().getString(R.string.pref_sensors_key_enabled_battery), true);
     }
 
     public static boolean toSyncBattery(Context context){
         return getSharedPrefsInstance(context)
-                .getBoolean(context.getResources().getString(R.string.pref_sensors_key_sync_battery), false);
+                .getBoolean(context.getResources().getString(R.string.pref_sensors_key_sync_battery), true);
     }
 
 

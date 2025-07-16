@@ -25,22 +25,26 @@ package uk.ac.sussex.wear.android.datalogger.collector;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Handler;
 import android.os.SystemClock;
 import androidx.core.app.ActivityCompat;
 import android.telephony.CellIdentityCdma;
 import android.telephony.CellIdentityGsm;
 import android.telephony.CellIdentityLte;
+import android.telephony.CellIdentityNr;
 import android.telephony.CellIdentityWcdma;
 import android.telephony.CellInfo;
 import android.telephony.CellInfoCdma;
 import android.telephony.CellInfoGsm;
 import android.telephony.CellInfoLte;
+import android.telephony.CellInfoNr;
 import android.telephony.CellInfoWcdma;
 import android.telephony.CellLocation;
 import android.telephony.CellSignalStrengthCdma;
 import android.telephony.CellSignalStrengthGsm;
 import android.telephony.CellSignalStrengthLte;
+import android.telephony.CellSignalStrengthNr;
 import android.telephony.CellSignalStrengthWcdma;
 import android.telephony.PhoneStateListener;
 import android.telephony.SignalStrength;
@@ -481,8 +485,45 @@ public class CellsInfoDataCollector extends AbstractDataCollector {
                         + "0;"
                         + "0";
 
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                if (cellInfo instanceof CellInfoNr) {
+                    // True if this cell is registered to the mobile network.
+                    int isRegistered = cellInfo.isRegistered() ? 1 : 0;
+
+                    // --- NR signal strength metrics ---
+                    CellSignalStrengthNr nrStrength = (CellSignalStrengthNr) ((CellInfoNr) cellInfo).getCellSignalStrength();
+                    int ssRsrp = nrStrength.getSsRsrp();   // RSRP in dBm
+                    int ssRsrq = nrStrength.getSsRsrq();   // RSRQ in dB×10
+                    int ssSinr = nrStrength.getSsSinr();   // SINR in dB
+
+                    // --- NR cell identity metrics ---
+                    CellIdentityNr nrId = (CellIdentityNr) ((CellInfoNr) cellInfo).getCellIdentity();
+                    long nci    = nrId.getNci();     // 36-bit NR Cell Identity
+                    String mcc     = nrId.getMccString();
+                    String mnc     = nrId.getMncString();
+                    int pci     = nrId.getPci();
+                    int tac     = nrId.getTac();
+
+                    message += ";NR;"
+                            + isRegistered + ";"
+                            + nci          + ";"
+                            + mcc          + ";"
+                            + mnc          + ";"
+                            + pci          + ";"
+                            + tac          + ";"
+                            + ssRsrp       + ";"   // in place of asuLevel
+                            + ssRsrq       + ";"   // in place of dBm
+                            + ssSinr       + ";"   // in place of level
+                            + "0;"
+                            + "0;"
+                            + "0;"
+                            + "0;"
+                            + "0;"
+                            + "0;"
+                            + "0";
+                }
             } else {
-                Log.e(TAG, "Unknown type of cell signal" );
+                Log.e(TAG, "Unknown type of cell signal");
             }
         }
         return message;
